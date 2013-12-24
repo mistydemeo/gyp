@@ -859,10 +859,12 @@ class XcodeSettings(object):
         l = '-l' + m.group(1)
       else:
         l = library
+
     if self._SdkPath():
-      return l.replace('$(SDKROOT)', self._SdkPath(config_name))
+      sdk_root = self._SdkPath(config_name)
     else:
-      return l
+      sdk_root = ''
+    return l.replace('$(SDKROOT)', sdk_root)
 
   def AdjustLibraries(self, libraries, config_name=None):
     """Transforms entries like 'Cocoa.framework' in libraries into entries like
