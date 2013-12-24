@@ -330,7 +330,7 @@ class XcodeSettings(object):
     cflags = []
 
     sdk_root = self._SdkPath()
-    if sdk_root:
+    if 'SDKROOT' in self._Settings() and sdk_root:
       cflags.append('-isysroot %s' % sdk_root)
 
     if self._Test('CLANG_WARN_CONSTANT_CONVERSION', 'YES', default='NO'):
@@ -639,7 +639,7 @@ class XcodeSettings(object):
 
     self._AppendPlatformVersionMinFlags(ldflags)
 
-    if self._SdkPath():
+    if 'SDKROOT' in self._Settings() and self._SdkPath():
       ldflags.append('-isysroot ' + self._SdkPath())
 
     for library_path in self._Settings().get('LIBRARY_SEARCH_PATHS', []):
@@ -860,9 +860,8 @@ class XcodeSettings(object):
       else:
         l = library
 
-    if self._SdkPath():
-      sdk_root = self._SdkPath(config_name)
-    else:
+    sdk_root = self._SdkPath(config_name)
+    if not sdk_root:
       sdk_root = ''
     return l.replace('$(SDKROOT)', sdk_root)
 
